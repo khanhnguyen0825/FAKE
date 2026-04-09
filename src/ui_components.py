@@ -5,7 +5,6 @@ import os
 MAP_MAPPING = {
     "Cơ xương khớp": "co-xuong-khop.png",
     "Da liễu": "da-lieu.png",
-    "Nội tiết": "noi-tiet.png",
     "Nội Tiêu hóa": "noi-tiet.png", 
     "Răng Hàm Mặt": "rang-ham-mat.png",
     "Sản khoa": "san.png",
