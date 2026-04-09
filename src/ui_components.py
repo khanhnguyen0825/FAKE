@@ -14,6 +14,10 @@ MAP_MAPPING = {
 
 def render_map_image(chuyen_khoa):
     """Hiển thị bản đồ chỉ đường dựa trên chuyên khoa"""
+    if chuyen_khoa in ["KHÁM TỔNG QUÁT", "QUẦY LỄ TÂN"]:
+        st.info("💡 **Gợi ý:** Để được hỗ trợ chính xác nhất cho triệu chứng này, mời bạn di chuyển đến **Sảnh chính Tầng 1 (Quầy Lễ Tân)** để nhân viên y tế hướng dẫn trực tiếp.")
+        return
+
     file_name = MAP_MAPPING.get(chuyen_khoa)
     if file_name:
         map_path = os.path.join("map", file_name)
