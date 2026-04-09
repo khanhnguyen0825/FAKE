@@ -169,7 +169,6 @@ if "pending_draft_text" not in st.session_state:
 if "last_audio_sig" not in st.session_state:
     st.session_state.last_audio_sig = None
 
-# Apply deferred text updates before rendering the input widget.
 if st.session_state.pending_draft_text is not None:
     st.session_state.draft_input = st.session_state.pending_draft_text
     st.session_state.pending_draft_text = None
@@ -213,19 +212,18 @@ for idx, msg in enumerate(st.session_state.messages):
             st.markdown(msg.get("display", msg["content"]))
 
 # Thanh nhập: text + mic + gửi trên cùng 1 hàng
-with st.form(key="prompt_bar_form", clear_on_submit=True):
-    input_cols = st.columns([10.6, 0.9, 0.7], vertical_alignment="center")
-    with input_cols[0]:
-        st.text_input(
-            "Mô tả chi tiết triệu chứng của bạn",
-            key="draft_input",
-            placeholder="Ví dụ: Tôi bị đau răng khôn",
-            label_visibility="collapsed",
-        )
-    with input_cols[1]:
-        audio_input = st.audio_input("Mic", label_visibility="collapsed")
-    with input_cols[2]:
-        submitted = st.form_submit_button("➤", type="primary", use_container_width=True, help="Gửi")
+input_cols = st.columns([10.6, 0.9, 0.7], vertical_alignment="center")
+with input_cols[0]:
+    st.text_input(
+        "Mô tả chi tiết triệu chứng của bạn",
+        key="draft_input",
+        placeholder="Ví dụ: Tôi bị đau răng khôn",
+        label_visibility="collapsed",
+    )
+with input_cols[1]:
+    audio_input = st.audio_input("Mic", label_visibility="collapsed")
+with input_cols[2]:
+    submitted = st.button("➤", type="primary", use_container_width=True, help="Gửi")
 
 if audio_input is not None:
     audio_bytes = audio_input.getvalue()
@@ -249,6 +247,7 @@ if submitted:
     if candidate:
         submitted_input = candidate
         st.session_state.messages.append({"role": "user", "content": submitted_input})
+        st.session_state.pending_draft_text = ""
     else:
         st.warning("Vui lòng nhập hoặc nói triệu chứng trước khi gửi.")
 
