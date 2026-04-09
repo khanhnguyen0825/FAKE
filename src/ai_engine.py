@@ -39,3 +39,21 @@ def get_triage_result(messages_list):
         return json.loads(response.choices[0].message.content)
     except Exception as e:
         return {"error": str(e)}
+
+
+def transcribe_audio_bytes(audio_bytes, language_code=None):
+    try:
+        audio_buffer = io.BytesIO(audio_bytes)
+        audio_buffer.name = "recording.wav"
+
+        request_payload = {
+            "model": "gpt-4o-mini-transcribe",
+            "file": audio_buffer,
+        }
+        if language_code:
+            request_payload["language"] = language_code
+
+        transcript = client.audio.transcriptions.create(**request_payload)
+        return {"text": transcript.text.strip()}
+    except Exception as e:
+        return {"error": str(e)}
