@@ -14,10 +14,6 @@ MAP_MAPPING = {
 
 def render_map_image(chuyen_khoa):
     """Hiển thị bản đồ chỉ đường dựa trên chuyên khoa"""
-    if chuyen_khoa in ["KHÁM TỔNG QUÁT", "QUẦY LỄ TÂN"]:
-        st.info("💡 **Gợi ý:** Để được hỗ trợ chính xác nhất cho triệu chứng này, mời bạn di chuyển đến **Sảnh chính Tầng 1 (Quầy Lễ Tân)** để nhân viên y tế hướng dẫn trực tiếp.")
-        return
-
     file_name = MAP_MAPPING.get(chuyen_khoa)
     if file_name:
         map_path = os.path.join("map", file_name)
@@ -183,25 +179,30 @@ def render_right_sidebar():
         "0% { transform: translateX(0); }"
         "100% { transform: translateX(-50%); }"
         "}"
-        "@media (max-width: 1400px) {"
+        "@media (max-width: 1080px) {"
         ".right-sidebar-container { display: none; }"
         "}"
         "</style>"
         "<div class='right-sidebar-container'>"
         "<div class='sidebar-content-wrapper'>"
+        "<div class='main-title'>Hướng dẫn mô tả</div>"
         "<div class='guide-section'>"
         "<span class='guide-label'>Hướng dẫn nhập liệu</span>"
         "<div class='premium-card'>"
-        "<div class='card-title'> Mô tả chi tiết</div>"
-        "<div class='card-desc'>Hãy nói mô tả bệnh mà mình mắc phải ví dụ:Tôi bị phát ban đỏ -> AI sẽ chỉ phòng da liễu.</div>"
+        "<div class='card-title'>🔍 Mô tả chi tiết</div>"
+        "<div class='card-desc'>Thay vì nói 'đau đầu', hãy thử 'Tôi bị đau đầu vùng thái dương từ 2 tiếng trước'.</div>"
         "</div>"
         "<div class='premium-card'>"
-        "<div class='card-title'> Cung cấp ngữ cảnh</div>"
+        "<div class='card-title'>📝 Cung cấp ngữ cảnh</div>"
         "<div class='card-desc'>Nhập thêm các triệu chứng đi kèm như sốt, ho, hoặc buồn nôn để AI phân loại chính xác hơn.</div>"
         "</div>"
         "<div class='premium-card'>"
-        "<div class='card-title'> Câu hỏi ví dụ</div>"
-        "<div class='card-desc'>'Tôi bị nổi ban đỏ khắp người và ngứa ngáy, nên đi khám khoa nào?'</div>"
+        "<div class='card-title'>💡 Câu hỏi ví dụ</div>"
+        "<div class='card-desc'>'Bé nhà tôi 3 tuổi bị nổi ban đỏ khắp người và sốt cao 39 độ, nên đi khám khoa nào?'</div>"
+        "</div>"
+        "<div class='premium-card'>"
+        "<div class='card-title'>👤 Thông tin cá nhân</div>"
+        "<div class='card-desc'>Đừng quên đề cập đến độ tuổi và giới tính để AI đưa ra gợi ý chuyên sâu hơn (ví dụ: nam, 45 tuổi).</div>"
         "</div>"
         "</div>"
         "<div class='slider-box'>"

@@ -17,7 +17,8 @@ st.set_page_config(page_title="V-Triage AI", page_icon="🏥", layout="centered"
 
 st.title("V-Triage: TRỢ LÝ SÀNG LỌC VINMEC")
 st.markdown("*Lưu ý: Hệ thống AI chỉ mang tính chất hỗ trợ gợi ý chuyên khoa, không thay thế chẩn đoán của bác sĩ.*")
-
+# Render right sidebar instructions
+render_right_sidebar()
 st.write("---")
 
 # Mảng lưu lịch sử chat đơn giản
@@ -33,6 +34,17 @@ if "last_audio_sig" not in st.session_state:
 if st.session_state.pending_draft_text is not None:
     st.session_state.draft_input = st.session_state.pending_draft_text
     st.session_state.pending_draft_text = None
+
+
+def submit_prompt_from_input(show_warning=False):
+    candidate = st.session_state.draft_input.strip()
+    if candidate:
+        st.session_state.messages.append({"role": "user", "content": candidate})
+        st.session_state.pending_draft_text = ""
+        return candidate
+    if show_warning:
+        st.warning("Vui lòng nhập hoặc nói triệu chứng trước khi gửi.")
+    return None
 
 for idx, msg in enumerate(st.session_state.messages):
     with st.chat_message(msg["role"]):
@@ -80,6 +92,7 @@ with input_cols[0]:
         key="draft_input",
         placeholder="Ví dụ: Tôi bị đau răng khôn",
         label_visibility="collapsed",
+        on_change=submit_prompt_from_input,
     )
 with input_cols[1]:
     audio_input = st.audio_input("Mic", label_visibility="collapsed")
@@ -104,13 +117,7 @@ if audio_input is not None:
 
 submitted_input = None
 if submitted:
-    candidate = st.session_state.draft_input.strip()
-    if candidate:
-        submitted_input = candidate
-        st.session_state.messages.append({"role": "user", "content": submitted_input})
-        st.session_state.pending_draft_text = ""
-    else:
-        st.warning("Vui lòng nhập hoặc nói triệu chứng trước khi gửi.")
+    submitted_input = submit_prompt_from_input(show_warning=True)
 
 # Xử lý Trigger AI
 if len(st.session_state.messages) > 0 and st.session_state.messages[-1]["role"] == "user":
