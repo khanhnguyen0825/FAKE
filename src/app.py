@@ -10,6 +10,7 @@ from ui_components import (
     render_uncertain_path, 
     render_happy_path, 
     render_error, 
+    render_refuse_path,
     render_right_sidebar
 )
 
@@ -60,7 +61,7 @@ for idx, msg in enumerate(st.session_state.messages):
                 elif khoa == "EMERGENCY":
                     render_emergency_path(data)
                 elif khoa == "TỪ CHỐI":
-                    render_error(data.get("giai_thich_ngan", "Yêu cầu bị từ chối."))
+                    render_refuse_path(data.get("giai_thich_ngan", "Yêu cầu bị từ chối."))
                 elif khoa == "UNKNOWN" or conf < 0.7:
                     render_uncertain_path(data)
                     

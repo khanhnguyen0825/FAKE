@@ -14,6 +14,10 @@ MAP_MAPPING = {
 
 def render_map_image(chuyen_khoa):
     """Hiển thị bản đồ chỉ đường dựa trên chuyên khoa"""
+    if chuyen_khoa in ["KHÁM TỔNG QUÁT", "QUẦY LỄ TÂN"]:
+        st.info("💡 **Gợi ý:** Để được hỗ trợ chính xác nhất cho triệu chứng này, mời bạn di chuyển đến **Sảnh chính Tầng 1 (Quầy Lễ Tân)** để nhân viên y tế hướng dẫn trực tiếp.")
+        return
+
     file_name = MAP_MAPPING.get(chuyen_khoa)
     if file_name:
         map_path = os.path.join("map", file_name)
@@ -58,21 +62,37 @@ def render_uncertain_path(data):
 
 def render_happy_path(data):
     chuyen_khoa = data.get("chuyen_khoa")
-    st.success(f"**Chuyên khoa đề xuất:** {chuyen_khoa}")
-    st.progress(data.get("confidence_score", 0))
-    st.caption(f"Độ tự tin của AI: {data.get('confidence_score', 0) * 100}%")
-    st.write(f"**Lý do:** {data.get('giai_thich_ngan')}")
 
-    # Hiển thị bản đồ chỉ đường
-    render_map_image(chuyen_khoa)
+    if chuyen_khoa == "QUẦY LỄ TÂN":
+        st.info("**Hướng dẫn phân luồng:** Vui lòng tới Quầy Lễ Tân để được hỗ trợ trực tiếp.")
+        st.write(f"**Lý do:** {data.get('giai_thich_ngan')}")
+        
+        if data.get("yeu_cau_chi_duong"):
+            render_map_image(chuyen_khoa)
+            
+        if st.button("Đã hiểu / Quay lại", use_container_width=True):
+            st.info("Vui lòng gõ vào ô chat để bắt đầu một hội thoại mới.")
+    else:
+        st.success(f"**Chuyên khoa đề xuất:** {chuyen_khoa}")
+        st.progress(data.get("confidence_score", 0))
+        st.caption(f"Độ tự tin của AI: {data.get('confidence_score', 0) * 100}%")
+        st.write(f"**Lý do:** {data.get('giai_thich_ngan')}")
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("ĐẶT LỊCH KHÁM NGAY", type="primary", use_container_width=True):
-            st.success("Ghi nhận lịch hẹn!")
-    with col2:
-        if st.button("Kết quả sai? Sửa triệu chứng", use_container_width=True):
-            st.info("Vui lòng gõ bổ sung đính chính vào ô chat bên dưới!")
+        # Chỉ hiển thị bản đồ nếu AI xác nhận đây là yêu cầu chỉ đường (yeu_cau_chi_duong = True)
+        if data.get("yeu_cau_chi_duong"):
+            render_map_image(chuyen_khoa)
+
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("ĐẶT LỊCH KHÁM NGAY", type="primary", use_container_width=True):
+                st.success("Ghi nhận lịch hẹn!")
+        with col2:
+            if st.button("Kết quả sai? Sửa triệu chứng", use_container_width=True):
+                st.info("Vui lòng gõ bổ sung đính chính vào ô chat bên dưới!")
+
+
+def render_refuse_path(msg):
+    st.info(f"**Phản hồi từ AI:** {msg}")
 
 
 def render_error(error_msg):
