@@ -15,7 +15,7 @@ MAP_MAPPING = {
 def render_map_image(chuyen_khoa):
     """Hiển thị bản đồ chỉ đường dựa trên chuyên khoa"""
     if chuyen_khoa in ["KHÁM TỔNG QUÁT", "QUẦY LỄ TÂN"]:
-        st.info("💡 **Gợi ý:** Để được hỗ trợ chính xác nhất cho triệu chứng này, mời bạn di chuyển đến **Sảnh chính Tầng 1 (Quầy Lễ Tân)** để nhân viên y tế hướng dẫn trực tiếp.")
+        st.info("**Gợi ý:** Để được hỗ trợ chính xác nhất cho triệu chứng này, mời bạn di chuyển đến **Sảnh chính Tầng 1 (Quầy Lễ Tân)** để nhân viên y tế hướng dẫn trực tiếp.")
         return
 
     file_name = MAP_MAPPING.get(chuyen_khoa)
@@ -39,7 +39,7 @@ def render_emergency_path(data):
         data.get("giai_thich_ngan", "Dấu hiệu y tế khẩn cấp, vui lòng không chờ đợi!")
     )
     if st.button(
-        "GỌI CẤP CỨU VINMEC (115) NGAY", type="primary", use_container_width=True
+        "GỌI CẤP CỨU VINMEC (115) NGAY", type="primary", width="stretch"
     ):
         st.error("Đang kết nối tổng đài cấp cứu...")
     st.warning("Hệ thống AI đã tạm khóa luồng tư vấn thông thường để bảo đảm an toàn.")
@@ -70,7 +70,7 @@ def render_happy_path(data):
         if data.get("yeu_cau_chi_duong"):
             render_map_image(chuyen_khoa)
             
-        if st.button("Đã hiểu / Quay lại", use_container_width=True):
+        if st.button("Đã hiểu / Quay lại", width="stretch"):
             st.info("Vui lòng gõ vào ô chat để bắt đầu một hội thoại mới.")
     else:
         st.success(f"**Chuyên khoa đề xuất:** {chuyen_khoa}")
@@ -84,10 +84,10 @@ def render_happy_path(data):
 
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("ĐẶT LỊCH KHÁM NGAY", type="primary", use_container_width=True):
+            if st.button("ĐẶT LỊCH KHÁM NGAY", type="primary", width="stretch"):
                 st.success("Ghi nhận lịch hẹn!")
         with col2:
-            if st.button("Kết quả sai? Sửa triệu chứng", use_container_width=True):
+            if st.button("Kết quả sai? Sửa triệu chứng", width="stretch"):
                 st.info("Vui lòng gõ bổ sung đính chính vào ô chat bên dưới!")
 
 
@@ -105,95 +105,96 @@ def render_right_sidebar():
     # Clean string for Streamlit markdown
     html_code = (
         "<style>"
-        "@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');"
+        "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');"
         ".right-sidebar-container {"
         "position: fixed;"
-        "right: 25px;"
-        "top: 80px;"
-        "width: 300px;"
-        "height: 85vh;"
+        "right: 20px;"
+        "top: 70px;"
+        "width: 280px;"
+        "height: 88vh;"
         "z-index: 999999;"
         "pointer-events: none;"
-        "font-family: 'Outfit', sans-serif;"
+        "font-family: 'Inter', sans-serif;"
         "}"
         ".sidebar-content-wrapper {"
         "pointer-events: auto;"
-        "background: rgba(255, 255, 255, 0.85);"
-        "backdrop-filter: blur(20px) saturate(180%);"
-        "-webkit-backdrop-filter: blur(20px) saturate(180%);"
-        "border: 1px solid rgba(209, 213, 219, 0.3);"
-        "border-radius: 24px;"
-        "padding: 24px;"
+        "background: rgba(15, 15, 26, 0.85);"
+        "backdrop-filter: blur(24px) saturate(160%);"
+        "-webkit-backdrop-filter: blur(24px) saturate(160%);"
+        "border: 1px solid rgba(255, 255, 255, 0.08);"
+        "border-radius: 20px;"
+        "padding: 22px 18px;"
         "height: 100%;"
         "display: flex;"
         "flex-direction: column;"
-        "box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);"
+        "box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);"
         "}"
         ".main-title {"
-        "font-size: 1.25rem;"
+        "font-size: 1rem;"
         "font-weight: 700;"
-        "background: linear-gradient(90deg, #1E3A8A, #3B82F6);"
+        "background: linear-gradient(90deg, #60a5fa, #a78bfa);"
         "-webkit-background-clip: text;"
         "-webkit-text-fill-color: transparent;"
-        "margin-bottom: 20px;"
+        "margin-bottom: 18px;"
         "text-align: center;"
+        "letter-spacing: -0.2px;"
         "}"
-        ".guide-section { margin-bottom: 24px; }"
+        ".guide-section { margin-bottom: 20px; flex: 1; }"
         ".guide-label {"
-        "font-size: 0.75rem;"
+        "font-size: 0.68rem;"
         "font-weight: 600;"
-        "color: #6B7280;"
+        "color: #6b7280;"
         "text-transform: uppercase;"
-        "letter-spacing: 0.05em;"
-        "margin-bottom: 12px;"
+        "letter-spacing: 0.08em;"
+        "margin-bottom: 10px;"
         "display: block;"
         "}"
         ".premium-card {"
-        "background: #FFFFFF;"
-        "border-radius: 16px;"
-        "padding: 16px;"
-        "margin-bottom: 12px;"
-        "border: 1px solid #F3F4F6;"
-        "box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);"
-        "transition: transform 0.2s ease, box-shadow 0.2s ease;"
+        "background: rgba(255,255,255,0.04);"
+        "border-radius: 12px;"
+        "padding: 12px 14px;"
+        "margin-bottom: 8px;"
+        "border: 1px solid rgba(255,255,255,0.07);"
+        "transition: transform 0.2s ease, background 0.2s ease;"
         "}"
         ".premium-card:hover {"
-        "transform: translateY(-2px);"
-        "box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);"
+        "transform: translateY(-1px);"
+        "background: rgba(255,255,255,0.07);"
         "}"
         ".card-title {"
         "font-weight: 600;"
-        "color: #111827;"
-        "font-size: 0.95rem;"
+        "color: #e5e7eb;"
+        "font-size: 0.82rem;"
         "margin-bottom: 4px;"
         "display: flex;"
         "align-items: center;"
-        "gap: 8px;"
+        "gap: 6px;"
         "}"
         ".card-desc {"
-        "color: #4B5563;"
-        "font-size: 0.85rem;"
+        "color: #9ca3af;"
+        "font-size: 0.77rem;"
         "line-height: 1.5;"
         "}"
         ".slider-box {"
         "margin-top: auto;"
-        "background: #F9FAFB;"
-        "border-radius: 12px;"
-        "padding: 10px;"
+        "background: rgba(99,102,241,0.1);"
+        "border: 1px solid rgba(99,102,241,0.2);"
+        "border-radius: 10px;"
+        "padding: 10px 12px;"
         "overflow: hidden;"
         "}"
         ".marquee {"
         "white-space: nowrap;"
         "overflow: hidden;"
         "display: inline-block;"
-        "animation: marquee-scroll 10s linear infinite;"
+        "animation: marquee-scroll 12s linear infinite;"
         "}"
         ".marquee span {"
         "display: inline-block;"
         "padding-right: 40px;"
-        "color: #3B82F6;"
+        "color: #818cf8;"
         "font-weight: 500;"
-        "font-size: 0.85rem;"
+        "font-size: 0.78rem;"
         "}"
         "@keyframes marquee-scroll {"
         "0% { transform: translateX(0); }"
@@ -209,11 +210,11 @@ def render_right_sidebar():
         "<span class='guide-label'>Hướng dẫn nhập liệu</span>"
         "<div class='premium-card'>"
         "<div class='card-title'> Mô tả chi tiết</div>"
-        "<div class='card-desc'>Hãy nói mô tả bệnh mà mình mắc phải ví dụ:Tôi bị phát ban đỏ -> AI sẽ chỉ phòng da liễu.</div>"
+        "<div class='card-desc'>Hãy nói mô tả bệnh mà mình mắc phải, ví dụ: Tôi bị phát ban đỏ -> AI sẽ chỉ cho bạn tới đúng phòng khoa Da liễu.</div>"
         "</div>"
         "<div class='premium-card'>"
         "<div class='card-title'> Cung cấp ngữ cảnh</div>"
-        "<div class='card-desc'>Nhập thêm các triệu chứng đi kèm như sốt, ho, hoặc buồn nôn để AI phân loại chính xác hơn.</div>"
+        "<div class='card-desc'>Nhập thêm các triệu chứng đi kèm như sốt, ho, hoặc buồn nôn,... để AI phân loại chính xác hơn.</div>"
         "</div>"
         "<div class='premium-card'>"
         "<div class='card-title'> Câu hỏi ví dụ</div>"
@@ -222,7 +223,7 @@ def render_right_sidebar():
         "</div>"
         "<div class='slider-box'>"
         "<div class='marquee'>"
-        "<span>✨ Số điện thoại cấp cứu: 115</span>"
+        "<span>Số điện thoại cấp cứu: 115</span>"
         "</div>"
         "</div>"
         "</div>"

@@ -14,10 +14,204 @@ from ui_components import (
     render_right_sidebar
 )
 
-st.set_page_config(page_title="V-Triage AI", page_icon="🏥", layout="centered")
+st.set_page_config(page_title="V-Triage AI", layout="centered")
 
-st.title("V-Triage: TRỢ LÝ SÀNG LỌC VINMEC")
-st.markdown("*Lưu ý: Hệ thống AI chỉ mang tính chất hỗ trợ gợi ý chuyên khoa, không thay thế chẩn đoán của bác sĩ.*")
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ── Global reset ── */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif !important;
+}
+
+/* ── Page background ── */
+[data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%) !important;
+    min-height: 100vh;
+}
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+/* ── Main content max-width centering ── */
+.block-container {
+    max-width: 780px !important;
+    padding-top: 2rem !important;
+    padding-bottom: 6rem !important;
+}
+
+/* ── App title & subtitle ── */
+h1 {
+    font-size: 1.8rem !important;
+    font-weight: 800 !important;
+    background: linear-gradient(90deg, #60a5fa, #a78bfa, #f472b6) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+    letter-spacing: -0.5px !important;
+    margin-bottom: 4px !important;
+}
+[data-testid="stMarkdown"] em {
+    color: #6b7280 !important;
+    font-size: 0.82rem !important;
+}
+
+/* ── Divider ── */
+hr {
+    border: none !important;
+    border-top: 1px solid rgba(255,255,255,0.07) !important;
+    margin: 12px 0 !important;
+}
+
+/* ── Chat messages ── */
+[data-testid="stChatMessage"] {
+    border-radius: 16px !important;
+    padding: 14px 18px !important;
+    margin-bottom: 10px !important;
+    border: 1px solid rgba(255,255,255,0.06) !important;
+}
+[data-testid="stChatMessage"][data-testid*="user"] {
+    background: rgba(96, 165, 250, 0.08) !important;
+}
+[data-testid="stChatMessage"][data-testid*="assistant"] {
+    background: rgba(255,255,255,0.03) !important;
+}
+
+/* ── Success / Warning / Error / Info banners ── */
+[data-testid="stAlert"] {
+    border-radius: 12px !important;
+    border-left-width: 4px !important;
+    font-size: 0.9rem !important;
+}
+
+/* ── Progress bar ── */
+[data-testid="stProgress"] > div > div {
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6) !important;
+    border-radius: 99px !important;
+}
+[data-testid="stProgress"] > div {
+    background: rgba(255,255,255,0.08) !important;
+    border-radius: 99px !important;
+}
+
+/* ── Buttons ── */
+[data-testid="stButton"] button {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.2s ease !important;
+}
+[data-testid="stButton"] button[kind="primary"] {
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35) !important;
+}
+[data-testid="stButton"] button[kind="primary"]:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5) !important;
+}
+[data-testid="stButton"] button[kind="secondary"] {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    color: #d1d5db !important;
+}
+[data-testid="stButton"] button[kind="secondary"]:hover {
+    background: rgba(255,255,255,0.09) !important;
+    border-color: rgba(255,255,255,0.22) !important;
+}
+
+/* ── Input bar: text + mic + send ── */
+div[data-testid="stTextInput"] input {
+    height: 44px !important;
+    min-height: 44px !important;
+    background: rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 12px !important;
+    color: #f3f4f6 !important;
+    font-size: 0.92rem !important;
+    padding: 0 16px !important;
+    transition: border-color 0.2s ease !important;
+}
+div[data-testid="stTextInput"] input:focus {
+    border-color: #6366f1 !important;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.18) !important;
+}
+div[data-testid="stTextInput"] input::placeholder {
+    color: #6b7280 !important;
+}
+div[data-testid="stAudioInput"],
+div[data-testid="stAudioInput"] > div,
+div[data-testid="stAudioInput"] > div > div {
+    height: 44px !important;
+    min-height: 44px !important;
+    max-height: 44px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+}
+div[data-testid="stAudioInput"] button {
+    height: 44px !important;
+    width: 44px !important;
+    min-height: 44px !important;
+    border-radius: 12px !important;
+    background: rgba(255,255,255,0.06) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    transition: all 0.2s ease !important;
+}
+div[data-testid="stAudioInput"] button:hover {
+    background: rgba(255,255,255,0.12) !important;
+    border-color: rgba(255,255,255,0.22) !important;
+}
+
+/* ── Multiselect ── */
+[data-testid="stMultiSelect"] > div {
+    background: rgba(255,255,255,0.05) !important;
+    border: 1px solid rgba(255,255,255,0.12) !important;
+    border-radius: 12px !important;
+}
+
+/* ── Form submit button ── */
+[data-testid="stFormSubmitButton"] button {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    height: 44px !important;
+    background: linear-gradient(135deg, #3b82f6, #6366f1) !important;
+    border: none !important;
+    box-shadow: 0 4px 14px rgba(99, 102, 241, 0.3) !important;
+}
+
+/* ── Spinner text ── */
+[data-testid="stSpinner"] p {
+    color: #9ca3af !important;
+    font-size: 0.86rem !important;
+}
+
+/* ── Caption / small text ── */
+[data-testid="stCaptionContainer"] {
+    color: #6b7280 !important;
+    font-size: 0.78rem !important;
+}
+
+/* ── Warning / error message tweaks ── */
+.stWarning, .stError, .stSuccess, .stInfo {
+    border-radius: 12px !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.title("V-TRIAGE · TRỢ LÝ SÀNG LỌC VINMEC")
+st.markdown("*Hệ thống AI chỉ mang tính chất hỗ trợ gợi ý — không thay thế chẩn đoán của bác sĩ.*")
 # Render right sidebar instructions
 render_right_sidebar()
 st.write("---")
@@ -86,7 +280,7 @@ for idx, msg in enumerate(st.session_state.messages):
             st.markdown(msg.get("display", msg["content"]))
 
 # Thanh nhập: text + mic + gửi trên cùng 1 hàng
-input_cols = st.columns([10.6, 0.9, 0.7], vertical_alignment="center")
+input_cols = st.columns([11, 1, 1], vertical_alignment="center")
 with input_cols[0]:
     st.text_input(
         "Mô tả chi tiết triệu chứng của bạn",
@@ -98,7 +292,7 @@ with input_cols[0]:
 with input_cols[1]:
     audio_input = st.audio_input("Mic", label_visibility="collapsed")
 with input_cols[2]:
-    submitted = st.button("➤", type="primary", use_container_width=True, help="Gửi")
+    submitted = st.button("➤", type="primary", width="stretch", help="Gửi")
 
 if audio_input is not None:
     audio_bytes = audio_input.getvalue()
