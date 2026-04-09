@@ -5,10 +5,10 @@ import os
 MAP_MAPPING = {
     "Cơ xương khớp": "co-xuong-khop.png",
     "Da liễu": "da-lieu.png",
-    "Nội Tiêu hóa": "noi-tiet.png", 
+    "Nội Tiêu hóa": "noi-tieu-hoa.png", 
     "Răng Hàm Mặt": "rang-ham-mat.png",
     "Sản khoa": "san.png",
-    "EMERGENCY": None # Cấp cứu thường có biển báo riêng hoặc chỉ dẫn ưu tiên
+    "EMERGENCY": None 
 }
 
 def render_map_image(chuyen_khoa):
