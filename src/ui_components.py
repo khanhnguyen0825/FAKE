@@ -6,9 +6,10 @@ MAP_MAPPING = {
     "Cơ xương khớp": "co-xuong-khop.png",
     "Da liễu": "da-lieu.png",
     "Nội tiết": "noi-tiet.png",
-    "Nội Tiêu hóa": "noi-tiet.png", # Map tạm nếu AI trả về Nội Tiêu hóa
+    "Nội Tiêu hóa": "noi-tiet.png", 
     "Răng Hàm Mặt": "rang-ham-mat.png",
-    "Sản khoa": "san.png"
+    "Sản khoa": "san.png",
+    "EMERGENCY": None # Cấp cứu thường có biển báo riêng hoặc chỉ dẫn ưu tiên
 }
 
 def render_map_image(chuyen_khoa):
