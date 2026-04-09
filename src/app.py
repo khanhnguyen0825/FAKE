@@ -5,12 +5,21 @@ import streamlit as st
 import time
 import json
 from ai_engine import get_triage_result
-from ui_components import render_emergency_path, render_uncertain_path, render_happy_path, render_error
+from ui_components import (
+    render_emergency_path, 
+    render_uncertain_path, 
+    render_happy_path, 
+    render_error, 
+    render_right_sidebar
+)
 
 st.set_page_config(page_title="V-Triage AI", page_icon="🏥", layout="centered")
 
 st.title("V-Triage: TRỢ LÝ SÀNG LỌC VINMEC")
 st.markdown("*Lưu ý: Hệ thống AI chỉ mang tính chất hỗ trợ gợi ý chuyên khoa, không thay thế chẩn đoán của bác sĩ.*")
+
+# Render right sidebar instructions
+render_right_sidebar()
 
 st.write("---")
 
