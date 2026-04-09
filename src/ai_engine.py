@@ -43,17 +43,17 @@ def get_triage_result(messages_list):
 
 def transcribe_audio_bytes(audio_bytes, language_code=None):
     try:
-        audio_buffer = io.BytesIO(audio_bytes)
-        audio_buffer.name = "recording.wav"
+        # Chuẩn bị buffer âm thanh theo định dạng WebM (Chuẩn của Streamlit/Chrome)
+        audio_file = io.BytesIO(audio_bytes)
+        audio_file.name = "input.webm"
 
-        request_payload = {
-            "model": "gpt-4o-mini-transcribe",
-            "file": audio_buffer,
-        }
-        if language_code:
-            request_payload["language"] = language_code
-
-        transcript = client.audio.transcriptions.create(**request_payload)
+        # Gọi Whisper-1 với tham số đơn giản nhất để đạt độ chính xác cao nhất
+        transcript = client.audio.transcriptions.create(
+            model="whisper-1", 
+            file=audio_file, 
+            language="vi", 
+            prompt="Bác sĩ ơi, tôi bị đau đầu."
+        )
         return {"text": transcript.text.strip()}
     except Exception as e:
         return {"error": str(e)}
