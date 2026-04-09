@@ -5,157 +5,18 @@ import streamlit as st
 import time
 import json
 from ai_engine import get_triage_result, transcribe_audio_bytes
-from ui_components import render_emergency_path, render_uncertain_path, render_happy_path, render_error
+from ui_components import (
+    render_emergency_path, 
+    render_uncertain_path, 
+    render_happy_path, 
+    render_error, 
+    render_right_sidebar
+)
 
 st.set_page_config(page_title="V-Triage AI", page_icon="🏥", layout="centered")
 
 st.title("V-Triage: TRỢ LÝ SÀNG LỌC VINMEC")
 st.markdown("*Lưu ý: Hệ thống AI chỉ mang tính chất hỗ trợ gợi ý chuyên khoa, không thay thế chẩn đoán của bác sĩ.*")
-
-st.markdown(
-    """
-    <style>
-    /* Reserve room for the fixed prompt bar */
-    section.main > div.block-container,
-    div[data-testid="stAppViewBlockContainer"] > div {
-        padding-bottom: 8.5rem !important;
-    }
-
-    /* Make the form wrapper invisible so it doesn't show as an extra box */
-    div[data-testid="stForm"],
-    div[data-testid="stForm"] > div,
-    div[data-testid="stForm"] > div > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-
-    /* Prompt bar layout */
-    div[data-testid="stVerticalBlock"] div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) {
-        background: color-mix(in srgb, var(--secondary-background-color) 92%, black 8%);
-        border: 1px solid rgba(220, 80, 80, 0.55);
-        border-radius: 12px;
-        padding: 1px 6px;
-        align-items: center;
-        gap: 6px;
-        overflow: hidden;
-        width: 100%;
-        max-width: 100%;
-        margin-left: 0;
-        margin-right: 0;
-        position: fixed;
-        left: 50%;
-        bottom: 1.35rem;
-        transform: translateX(-50%);
-        width: min(46rem, calc(100vw - 1.4rem));
-        max-width: calc(100vw - 1.4rem);
-        z-index: 2000;
-        box-shadow: 0 8px 26px rgba(0, 0, 0, 0.28);
-        backdrop-filter: blur(8px);
-    }
-
-    /* Remove white cards inside the connected prompt bar */
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"],
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] > div,
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] > div > div,
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] div[data-baseweb="input"] {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] input {
-        border: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        color: var(--text-color) !important;
-        min-height: 28px !important;
-        padding-left: 4px !important;
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-        line-height: 1.1 !important;
-    }
-
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] input::placeholder {
-        color: rgba(127, 127, 127, 0.9) !important;
-    }
-
-    /* Hide helper text like "Press enter to apply" under the prompt input */
-    div[data-testid="stHorizontalBlock"]:has(div[data-testid="stAudioInput"]) div[data-testid="stTextInput"] p {
-        display: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        height: 0 !important;
-    }
-
-    div[data-testid="stAudioInput"] {
-        margin-top: 0 !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    div[data-testid="stAudioInput"] > div,
-    div[data-testid="stAudioInput"] > div > div {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }
-
-    div[data-testid="stAudioInput"] button,
-    div[data-testid="stButton"] button {
-        border-radius: 10px !important;
-        min-height: 28px !important;
-        height: 28px !important;
-    }
-
-    div[data-testid="stAudioInput"] button {
-        border-color: transparent !important;
-        background: transparent !important;
-        box-shadow: none !important;
-    }
-
-    div[data-testid="stAudioInput"] button:hover,
-    div[data-testid="stAudioInput"] button:focus,
-    div[data-testid="stAudioInput"] button:active {
-        border-color: transparent !important;
-        box-shadow: none !important;
-    }
-
-    /* Prevent the send text from bleeding into the mic column */
-    div[data-testid="stButton"] {
-        overflow: hidden;
-    }
-    div[data-testid="stButton"] button {
-        width: 100% !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
-    }
-
-    /* Restore the submit button to orange like before */
-    div[data-testid="stButton"] button[kind="formSubmitButton"] {
-        background: rgb(255, 107, 53) !important;
-        color: #ffffff !important;
-        border: 1px solid rgb(255, 107, 53) !important;
-    }
-
-    div[data-testid="stButton"] button[kind="formSubmitButton"]:hover,
-    div[data-testid="stButton"] button[kind="formSubmitButton"]:focus,
-    div[data-testid="stButton"] button[kind="formSubmitButton"]:active {
-        background: rgb(235, 89, 28) !important;
-        color: #ffffff !important;
-        border: 1px solid rgb(235, 89, 28) !important;
-        box-shadow: none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
 
 st.write("---")
 
