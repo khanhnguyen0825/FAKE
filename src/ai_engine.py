@@ -5,6 +5,7 @@ import streamlit as st
 from openai import OpenAI
 import json
 import os
+import io
 from dotenv import load_dotenv
 
 # Tải file .env
